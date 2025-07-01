@@ -1,0 +1,28 @@
+[package]
+name = "price-service"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tokio = { version = "1.0", features = ["full"] }
+tokio-tungstenite = { version = "0.20", features = ["native-tls"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+futures-util = "0.3"
+anyhow = "1.0"
+env_logger = "0.10"
+solana-client = "2.2.1"
+solana-sdk = "2.2.1"
+hex = "0.4"
+carbon-raydium-amm-v4-decoder = "0.8.1"
+carbon-core = "0.8.1"
+anchor-client = "0.31.1"
+orca_whirlpools_client = "3.0.0"
+carbon-meteora-dlmm-decoder = "0.8.1"
+
+[dependencies.zeroize]
+version = "1.6.0"
+
+[dependencies.futures]
+version = "=0.3.31"
+
