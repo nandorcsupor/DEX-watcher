@@ -44,8 +44,6 @@ impl RaydiumMonitor {
             CommitmentConfig::confirmed(),
         );
         
-        // Raydium SOL/USDC pool address on devnet
-        // Note: This is a real pool address, might need updating
         let sol_usdc_pool = Pubkey::from_str("58oQChx4yWmvKdwLLZzBi4ChoCc2fqCUWBkwMihLYQo2")
             .expect("Invalid pool address");
             
@@ -131,14 +129,6 @@ impl RaydiumMonitor {
                 let base_vault_amount = self.get_token_account_balance(&raydium_info.token_coin).await?;
                 let quote_vault_amount = self.get_token_account_balance(&raydium_info.token_pc).await?;
                 
-                /* 
-                println!("🎯 Successfully parsed Raydium AMM data!");
-                println!("   Base Mint: {}", raydium_info.coin_mint);
-                println!("   Quote Mint: {}", raydium_info.pc_mint);
-                println!("   Base Reserve: {} SOL", base_vault_amount as f64 / 1e9);
-                println!("   Quote Reserve: {} USDC", quote_vault_amount as f64 / 1e6);
-                */
-                
                 Ok(AmmInfo {
                     pool_id: self.sol_usdc_pool.to_string(),
                     base_mint: raydium_info.coin_mint.to_string(),
@@ -171,19 +161,6 @@ impl RaydiumMonitor {
         
         return usdc_amount / sol_amount;  // Price of SOL in USDC
     }
-    
-    // Only broadcast if price changed by more than 0.01%
-    /* 
-    fn should_broadcast_update(&self, new_price: f64) -> bool {
-        match self.price_cache {
-            Some(cached_price) => {
-                let change = (new_price - cached_price).abs() / cached_price;
-                change > 0.001  // 0.1% threshold
-            } 
-            None => true,  // First update
-        }
-    }
-    */
     
     // Calculate percentage change from cached price
     fn calculate_change_percent(&self, current_price: f64) -> f64 {

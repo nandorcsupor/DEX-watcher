@@ -19,7 +19,6 @@ impl MeteoraMonitor {
    pub fn new() -> Self {
        let rpc_client = RpcClient::new("https://api.mainnet-beta.solana.com".to_string());
        
-       // SOL/USDC DLMM Pool address (example - need to find actual address)
        let dlmm_pool_address = Pubkey::from_str("5rCf1DM8LjKTw4YqhnoLcngyZYeNnQqztScTogYHAS6").unwrap();
        
        Self {

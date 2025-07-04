@@ -18,7 +18,6 @@ impl OrcaMonitor {
     pub fn new() -> Self {
         let rpc_client = RpcClient::new("https://api.mainnet-beta.solana.com".to_string());
         
-        // SOL/USDC Whirlpool - ez egy ismert pool address
         let whirlpool_address = Pubkey::from_str("Czfq3xZZDmsdGdUyrNLtRhGc47cXcZtLG4crryfu44zE").unwrap();
         
         Self {
@@ -69,14 +68,11 @@ impl OrcaMonitor {
     }
 
     async fn fetch_whirlpool_data(&self) -> Result<(f64, u64, u64)> {
-    // OFFICIAL SDK-val lekérjük a Whirlpool account-ot
     let account = self.rpc_client.get_account(&self.whirlpool_address)?;
     
-    // Változókat kell létrehozni a borrowing-hoz
     let mut lamports = account.lamports;
     let mut data = account.data;
-    
-    // AccountInfo-t kell csinálni a raw Account-ból
+
     let account_info = AccountInfo::new(
         &self.whirlpool_address,
         false,
@@ -88,17 +84,14 @@ impl OrcaMonitor {
         account.rent_epoch,
     );
     
-    // Az SDK Whirlpool struct-jával deserialize-oljuk
     let whirlpool = Whirlpool::try_from(&account_info)?;
-    
-    // Token vault balances lekérése
+
     let base_balance = self.rpc_client.get_token_account_balance(&whirlpool.token_vault_a)?;
     let quote_balance = self.rpc_client.get_token_account_balance(&whirlpool.token_vault_b)?;
     
     let base_reserve = base_balance.amount.parse::<u64>()?;
     let quote_reserve = quote_balance.amount.parse::<u64>()?;
     
-    // sqrt_price -> price konverzió
     let price = whirlpool_price_from_sqrt_price(
         whirlpool.sqrt_price,
         6, // SOL decimals  
